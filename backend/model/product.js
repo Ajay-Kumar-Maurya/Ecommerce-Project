@@ -4,7 +4,7 @@ const productSchema = new mongoose.Schema({
    name: {
       type: String,
       required: [true, 'Please enter product name'],
-      trim: true,
+      trim: true, // Remove all blankspace from start and end.
       maxLength: [100, 'Product name cannot exceed 100 characters']
    },
    price: {
@@ -23,11 +23,11 @@ const productSchema = new mongoose.Schema({
    },
    images: [
       {
-         public_id: {
+         public_id: { // id of images from cloudanary.
             type: String,
             required: true
          },
-         url: {
+         url: { // url of images from cloudanary.
             type: String,
             required: true
          }
