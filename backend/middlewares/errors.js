@@ -19,6 +19,19 @@ module.exports = (err, req, res, next) => {
 
         error.message = err.message
 
+        // MongoDB Cast to ObjectId failed Error
+        if(err.name === 'CastError'){
+            const message = `Resource not found. Invalid: ${err.path}`
+            error = new ErrorHandler(message, 400)
+        }
+
+        // Handling Mongoose Validation Error
+        // Show error, if values are missing while pushing data
+        if(err.name === 'ValidationError'){
+            const message = Object.values(err.errors).map(values => values.message)
+            error = new ErrorHandler(message, 400)
+        }
+
         res.status(error.statusCode).json({
             success: false,
             errMessage: error.message || 'Internal Server Error'
