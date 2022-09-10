@@ -3,22 +3,28 @@ const ErrorHandler = require('../utils/errorHandler');
 // This arrow function is a middleware that takes four parameters.
 // err is an Error Handler object.
 module.exports = (err, req, res, next) => {
-    // err.statusCode = err.statusCode || 500
-    // err.message = err.message || 'Internal Server Error'
+    err.statusCode = err.statusCode || 500
 
-    // res.status(err.statusCode).json({
-    //     success: false,
-    //     error: err.stack
-    // })
+    if(process.env.NODE_ENV === 'DEVELOPMENT'){
+        res.status(err.statusCode).json({
+            success: false,
+            error:err,
+            errMessage: err.message,
+            stack: err.stack
+        })
+    }
 
-    // Second way
-    code = err.statusCode || 500
-    msg = err.message || 'Internal Server Error'
+    if(process.env.NODE_ENV === 'PRODUCTION'){
+        let error = {...err}
 
-    res.status(code).json({
-        success: false,
-        error: err.stack
-    })
+        error.message = err.message
+
+        res.status(error.statusCode).json({
+            success: false,
+            errMessage: error.message || 'Internal Server Error'
+        })
+    }
+    
 
 }
 
