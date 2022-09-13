@@ -28,7 +28,7 @@ class APIFeatures {
         const removeFields = ['keyword', 'limit', 'page']
         removeFields.forEach(el => delete queryCopy[el])
 
-        console.log(queryCopy);
+        // console.log(queryCopy);
 
         // Advanced Filter for Range Queries
         // 2000 <= price <= 5000, 3.5 < rating <= 5 etc.
@@ -37,11 +37,21 @@ class APIFeatures {
         let querystr = JSON.stringify(queryCopy)
         querystr = querystr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`)
 
-        console.log(querystr);
+        // console.log(querystr);
 
         // convert it back to JSON format.
         this.query = this.query.find(JSON.parse(querystr));
+
         return this;
+    }
+
+    pagination(resPerPage){
+        const currentPage = Number(this.queryStr.page) || 1
+        const skip = resPerPage * (currentPage - 1)
+
+        this.query = this.query.limit(resPerPage).skip(skip)
+
+        return this
     }
 }
 

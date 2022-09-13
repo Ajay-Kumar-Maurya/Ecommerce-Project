@@ -21,16 +21,20 @@ exports.newProduct = catchAsyncErrors(async (req, res, next) => {
 // Get all products => /api/v1/products?keyword=apple (Route with Search Feature)
 exports.getProducts = catchAsyncErrors(async (req, res, next) => {
    
+   const resPerPage = 4;
+   const productCount = await Product.countDocuments()
+
    const apiFeatures = new APIFeatures(Product.find(), req.query)
                            .search()
                            .filter()
-   // Search and Filter both opertions should be performed each time for this request
+                           .pagination(resPerPage)
 
    const products = await apiFeatures.query
 
    res.status(200).json({
       success: true,
-      count: products.length, // Total number of products
+      count: products.length,
+      productCount,
       products
    })
 })
