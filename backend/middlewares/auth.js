@@ -19,3 +19,14 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
     next()
 })
+
+// Handling users roles
+// Default role is user for newly created accounts, if role is not specified. (See: User model)
+exports.authorizeRoles = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return next(new ErrorHandler(`Role (${req.user.role}) is not allowed to acccess this resource`, 403))
+        }
+        next()
+    }
+}
