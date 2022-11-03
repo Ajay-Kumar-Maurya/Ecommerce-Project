@@ -8,6 +8,7 @@ const {
     resetPassword, 
     getUserProfile,
     updatePassword,
+    updateProfile,
     logout
 } = require('../controllers/userController')
 
@@ -22,6 +23,6 @@ router.route('/logout').get(logout)
 // user must be logged in to get his details
 router.route('/me').get(isAuthenticatedUser, getUserProfile)
 router.route('/password/update').put(isAuthenticatedUser, updatePassword)
-
+router.route('/me/update').get(isAuthenticatedUser, updateProfile)
 
 module.exports = router
